@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>mql4j</groupId>
+	<artifactId>mql4j-build</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Mql4j Build</name>
+	<description>Mql4j Build</description>
+	<url>http://www.mql4j.com/java</url>
+	<organization>
+		<name>MQL4J Software</name>
+		<url>http://www.mql4j.com</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+	<scm>
+		<url>https://github.com/mql4j/mql4j</url>
+	</scm>
+	<developers>
+		<developer>
+			<id>mschmidt</id>
+			<name>Michael Schmidt</name>
+			<email>michael . schmidt at mql4j.com</email>
+			<organization>MQL4J Software</organization>
+			<organizationUrl>http://www.mql4j.com</organizationUrl>
+			<roles>
+				<role>Project lead</role>
+			</roles>
+		</developer>
+	</developers>
+	<properties>
+		<main.basedir>${basedir}</main.basedir>
+	</properties>
+	<modules>
+		<module>mql4j-parent</module>
+		<module>mql4j-core</module>
+		<module>mql4j-examples</module>
+	</modules>
+</project>
