@@ -1,5 +1,11 @@
 *.class
 
+# Generated logs
+*.log
+
+# Temporary helper scripts
+*.sh
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 

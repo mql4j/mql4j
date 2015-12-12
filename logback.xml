@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<configuration scan="false">
+	<property name="DEFAULT_PATTERN" value="%d{yyyy-MM-dd'T'HH:mm:ss.SSS} %-20thread{20} %-40logger{40} [ %-5level ] %msg%n" />
+	<contextName>mql4j</contextName>
+	<statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
+	<!-- Appeder: console (stdout) -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${DEFAULT_PATTERN}</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<!-- Appender: Logfile -->
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>mql4j.java.log</file>
+		<encoder>
+			<pattern>${DEFAULT_PATTERN}</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>mql4j.java.%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>7</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>10MB</maxFileSize>
+		</triggeringPolicy>
+	</appender>
+
+	<!-- Mql4j log levels -->
+	<logger name="com.mql4j" level="DEBUG" additivity="true" />
+
+	<!-- Activemq log levels -->
+	<logger name="org.apache.activemq.broker" level="INFO" additivity="true" /> -->
+	<!-- <logger name="org.apache.activemq" level="WARN" additivity="true" /> -->
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="FILE" />
+	</root>
+</configuration>
