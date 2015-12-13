@@ -1,0 +1,7 @@
+LIBRARY "mql4j-activemq"
+EXPORTS
+	amqConnect
+	amqDest
+	amqSendMessage
+	amqRecvMessage
+	amqClose

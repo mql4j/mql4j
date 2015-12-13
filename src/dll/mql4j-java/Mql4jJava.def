@@ -1,0 +1,6 @@
+LIBRARY "mql4j-java"
+EXPORTS
+	javaStart
+	javaStop
+	javaStatus
+	javaCall
