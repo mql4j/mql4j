@@ -3,6 +3,7 @@ package com.mql4j.activemq;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.usage.MemoryUsage;
 import org.apache.activemq.usage.SystemUsage;
+import org.apache.activemq.util.ServiceStopper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,8 @@ public class ActivemqBroker implements Runnable {
 
 	public void close() {
 		try {
+			log.trace("Stopping open connections ...");
+			broker.stopAllConnectors(new ServiceStopper());
 			log.trace("Stopping activemq broker ...");
 			broker.stop();
 			broker = null;
@@ -59,14 +62,6 @@ public class ActivemqBroker implements Runnable {
 			MemoryUsage memoryUsage = new MemoryUsage();
 			memoryUsage.setLimit(200 * 1024 * 1023);
 			usage.setMemoryUsage(memoryUsage);
-			/*
-			StoreUsage storeUsage = new StoreUsage();
-			storeUsage.setLimit(2 * 1024 * 1024 * 1024);
-			usage.setStoreUsage(storeUsage);
-			TempUsage tempUsage = new TempUsage();
-			tempUsage.setLimit(2 * 1024 * 1024 * 1024);
-			usage.setTempUsage(tempUsage);
-			 */
 		}
 		return usage;
 	}

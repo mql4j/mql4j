@@ -19,41 +19,40 @@ import com.mql4j.activemq.DestinationType;
 import com.mql4j.core.tools.ThreadTools;
 
 public class Mql4jService implements Runnable {
-	private final static long TIMEOUT = 5000;
+	private final static long TIMEOUT = 100;
 	private static final String ACTIVEMQ_BROKER_URI = "tcp://localhost:61616";
 	private static final String EVENT_QUEUE = "com.mql4j.java.events";
 	private final static Logger log = LoggerFactory.getLogger(Mql4jService.class);
-	private ActivemqBroker activemq;
-	private ActivemqClient event;
-	private MessageConsumer eventConsumer;
+	private ActivemqBroker activemqBroker;
+	private ActivemqClient activemqClient;
+	private MessageConsumer eventQueueConsumer;
 	private ObjectMapper mapper;
 	private boolean run;
 
 	public Mql4jService() {
 		run = true;
-		activemq = null;
-		event = null;
-		eventConsumer = null;
+		activemqBroker = null;
+		activemqClient = null;
+		eventQueueConsumer = null;
 		mapper = new ObjectMapper();
 	}
 
 	@Override
 	public void run() {
 		try {
-			activemq = new ActivemqBroker(ACTIVEMQ_BROKER_URI);
-			activemq.run();
-			ActivemqClient event = new ActivemqClient();
-			event.connect(ACTIVEMQ_BROKER_URI);
-			eventConsumer = event.getConsumer(EVENT_QUEUE, DestinationType.QUEUE);
+			activemqBroker = new ActivemqBroker(ACTIVEMQ_BROKER_URI);
+			activemqBroker.run();
+			activemqClient = new ActivemqClient();
+			activemqClient.connect(ACTIVEMQ_BROKER_URI);
+			eventQueueConsumer = activemqClient.getConsumer(EVENT_QUEUE, DestinationType.QUEUE);
+			log.info("Event queue ready");
 		} catch (Exception e) {
 			log.error("Startup failed: " + e.getMessage());
-			close();
-			return;
+			run = false;
 		}
-		log.info("Event queue ready");
 		while (run) {
 			try {
-				Message message = eventConsumer.receive(TIMEOUT);
+				Message message = eventQueueConsumer.receive(TIMEOUT);
 				if (message != null) {
 					processMessage(message);
 				} else {
@@ -89,10 +88,9 @@ public class Mql4jService implements Runnable {
 	}
 
 	private void processEvent(Mql4jMessage msgObj) {
-		log.debug("Event " + msgObj.getCommand().toString());
+		log.trace("Event " + msgObj.getCommand().toString());
 		switch(msgObj.getCommand()) {
 		case PING:
-			log.info("Ping");
 			break;
 		case STACKTRACE:
 			ThreadTools.stackTrace();;
@@ -108,28 +106,24 @@ public class Mql4jService implements Runnable {
 	}
 
 	private void close() {
-		if (eventConsumer != null) {
+		if (eventQueueConsumer != null) {
 			try {
-				eventConsumer.close();
+				eventQueueConsumer.close();
 			} catch (JMSException e) {
-				log.warn("Failed to close event consumer: " + e.getMessage());
+				log.warn("Failed to close event queue consumer: " + e.getMessage());
 			}
 		}
-		if (event != null) {
-			event.close();
+		if (activemqClient != null) {
+			activemqClient.close();
 		}
-		if (activemq != null) {
-			activemq.close();
+		if (activemqBroker != null) {
+			activemqBroker.close();
 		}
-		run = false;
-		activemq = null;
-		event = null;
-		eventConsumer = null;
 	}
 
 	public static void main(String[] args) {
-		log.trace("main");
-		(new Thread(new Mql4jService())).start();
-		log.debug("Thread Mql4jService started");
+		Thread t = new Thread(new Mql4jService(), "Mql4jService");
+		t.setDaemon(true);
+		t.start();
 	}
 }
