@@ -48,7 +48,7 @@
 		<!-- Third Party -->
 		<activemq.version>5.12.1</activemq.version>
 		<commons-codec.version>1.10</commons-codec.version>
-		<commons-io.version>2.4</commons-io.version>
+		<commons-io.version>2.7</commons-io.version>
 		<google-guava.version>18.0</google-guava.version>
 		<joda-time.version>2.8.2</joda-time.version>
 		<jackson.version>2.10.1</jackson.version>
